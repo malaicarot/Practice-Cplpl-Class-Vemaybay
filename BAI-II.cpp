@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 class veMayBay
@@ -28,21 +29,24 @@ public:
     void exportTicket()
     {
         cout << "Gia ve: " << this->giaVe << endl;
-        cout << "Ten chuyen: " << this->tenChuyen << endl;
-        cout << "Ngay bay: " << this->ngayBay << endl;
+        // cout << "Ten chuyen: " << this->tenChuyen << endl;
+        // cout << "Ngay bay: " << this->ngayBay << endl;
     }
 };
 
 class Nguoi
 {
-public:
+private:
     string hoTen, gioiTinh, tuoi;
 
 public:
     // Ham tao
-    Nguoi(string _hoTen = "Nguyen Van A", string _gioiTinh = "Nam", string _tuoi = "20"); // Khai Bao Tham So
-    Nguoi(const Nguoi &nguoi);                                                            // Khai bao sao chep
+    Nguoi(string _hoTen = " ", string _gioiTinh = " ", string _tuoi = " "); // Khai Bao Tham So
+                                                                            // this->hoTen = this->gioiTinh = this->tuoi = "";
+    Nguoi(const Nguoi &nguoi); // Khai bao sao chep
     ~Nguoi();
+
+    // this->hoTen = this->gioiTinh = this->tuoi = "";
 
     // Ham Nhap - Xuat
     void enterInfor()
@@ -57,23 +61,31 @@ public:
     {
 
         cout << "Ho ten: " << this->hoTen << endl;
-        cout << "Gioi tinh: " << this->gioiTinh << endl;
-        cout << "Tuoi: " << this->tuoi << endl;
+        // cout << "Gioi tinh: " << this->gioiTinh << endl;
+        // cout << "Tuoi: " << this->tuoi << endl;
     }
 };
 
 class hanhKhach : public Nguoi
 {
-public:
+private:
     int soLuong = 0;
     veMayBay ve[1000];
     int tongTien = 0;
 
 public:
     // Ham tao
-    hanhKhach(int _soLuong = 1);
-    hanhKhach(const hanhKhach &khach);
-
+    hanhKhach()
+    {
+        this->soLuong = 0;
+        ve[this->soLuong];
+        tongTien = 0;
+    }
+    hanhKhach(const hanhKhach &khach)
+    {
+        soLuong = khach.soLuong;
+        tongTien = khach.tongTien;
+    }
     // Ham nhap - xuat
     void enterInfor()
     {
@@ -91,34 +103,60 @@ public:
     {
         cout << "----------Thong Tin Hanh Khach----------" << endl;
         Nguoi::exportInfor();
-        cout << "----------Thong Tin Chuyen Bay----------" << endl;
-        for (int i = 0; i < this->soLuong; i++)
-        {
-            ve[i].exportTicket();
-        }
+        // cout << "----------Thong Tin Chuyen Bay----------" << endl;
+        // for (int i = 0; i < this->soLuong; i++)
+        // {
+        //     ve[i].exportTicket();
+        // }
         cout << "==> Tong tien: " << this->tongTien << endl;
     }
+    bool operator<(const hanhKhach &obj)
+    {
+        if (this->tongTien < obj.tongTien)
+            return true;
+        else
+            return false;
+    }
+
     // Ham Huy
-    ~hanhKhach();
+    ~hanhKhach()
+    {
+    }
 };
 
+// Sort
+void sort(hanhKhach a[], int n)
+{
+
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (a[j] < a[j + 1])
+            {
+                swap(a[j], a[j + 1]);
+            }
+        }
+    }
+}
 int main()
 {
     int n;
     cout << "Nhap so luong khach hang: ";
     cin >> n;
-     cin.ignore(32767, '\n');
-    hanhKhach khach[n];
+    cin.ignore(32767, '\n');
+    hanhKhach *arr = new hanhKhach[n];
     for (int i = 0; i < n; i++)
     {
-        khach[i].enterInfor();
-    }
-    cout << "Output" << endl;
-    for (int i = 0; i < n; i++)
-    {
-        khach[i].exportInfor();
+        arr[i].enterInfor();
     }
 
+    sort(arr, n);
+    cout << "----------Output----------" << endl;
+    for (int i = 0; i < n; i++)
+    {
+        arr[i].exportInfor();
+    }
 
     system("pause");
     return 0;
@@ -164,23 +202,5 @@ Nguoi::Nguoi(const Nguoi &nguoi)
 }
 // Ham Huy
 Nguoi::~Nguoi()
-{
-}
-
-/*Dinh nghia Class Hanh Khach*/
-// Ham tao
-hanhKhach::hanhKhach(int _soLuong)
-{
-    soLuong = _soLuong;
-}
-hanhKhach::hanhKhach(const hanhKhach &khach)
-{
-    soLuong = khach.soLuong;
-}
-
-// Ham Tinh Tong Tien
-
-// Ham Huy
-hanhKhach::~hanhKhach()
 {
 }
